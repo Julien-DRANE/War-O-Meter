@@ -8,7 +8,7 @@ const feedUrls = [
     "https://www.france24.com/fr/actualites/rss",
     "https://www.reuters.com/rssFeed/worldNews",
     "https://apnews.com/apf-topnews",
-    "https://www.afp.com/en/rss",
+    "http://atlasflux.saynete.net/",
     "https://www.xinhuanet.com/english/rss",
     "https://tass.com/rss/v2.xml",
     "https://rss.nytimes.com/services/xml/rss/nyt/World.xml",
