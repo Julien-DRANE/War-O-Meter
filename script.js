@@ -50,33 +50,37 @@ async function collectNewsData() {
 
     for (let feedUrl of feedUrls) {
         try {
-            const response = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(feedUrl)}`);
-            const data = await response.json();
+            const response = await fetch(feedUrl);
+            const responseText = await response.text();
+            const parser = new DOMParser();
+            const xmlDoc = parser.parseFromString(responseText, "text/xml");
+            const items = xmlDoc.getElementsByTagName("item");
 
-            if (data.items) {
-                for (let item of data.items) {
-                    const content = (item.title + " " + item.description).toLowerCase();
-                    
-                    // Check for war keywords
-                    for (let word of warKeywords) {
-                        let matches = content.match(new RegExp(word, 'g'));
-                        if (matches) {
-                            wordCount += matches.length;
-                            keywordsFound.push(`${word} (${item.link})`);
-                        }
+            for (let item of items) {
+                const title = item.getElementsByTagName("title")[0]?.textContent.toLowerCase() || "";
+                const description = item.getElementsByTagName("description")[0]?.textContent.toLowerCase() || "";
+                const content = title + " " + description;
+                const link = item.getElementsByTagName("link")[0]?.textContent || "unknown link";
+                
+                // Check for war keywords
+                for (let word of warKeywords) {
+                    let matches = content.match(new RegExp(word, 'g'));
+                    if (matches) {
+                        wordCount += matches.length;
+                        keywordsFound.push(`${word} (${link})`);
                     }
-
-                    // Check for additional keywords (reduced impact)
-                    for (let word of additionalKeywords) {
-                        let matches = content.match(new RegExp(word, 'g'));
-                        if (matches) {
-                            additionalWordCount += matches.length;
-                            keywordsFound.push(`${word} (${item.link})`);
-                        }
-                    }
-
-                    totalEntries++;
                 }
+
+                // Check for additional keywords (reduced impact)
+                for (let word of additionalKeywords) {
+                    let matches = content.match(new RegExp(word, 'g'));
+                    if (matches) {
+                        additionalWordCount += matches.length;
+                        keywordsFound.push(`${word} (${link})`);
+                    }
+                }
+
+                totalEntries++;
             }
         } catch (e) {
             console.error(`Error fetching feed from ${feedUrl}`, e);
