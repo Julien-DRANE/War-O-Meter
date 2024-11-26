@@ -20,7 +20,7 @@ const feedUrls = [
     "https://www.elpais.com/rss/feed.html?feed=elpais/internacional",
     "https://www.globo.com/rss/",
     "https://www.sbs.com.au/news/feed",
-    "https://www.dailymaverick.co.za",
+    "https://feeds.capi24.com/v1/Search/articles/News24/TopStories/rss",
     "https://www.hindustantimes.com/rss/world-news/rssfeed.xml"
 ];
 
